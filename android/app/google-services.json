@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "399976911903",
+    "firebase_url": "https://fir-flutter-auth-6fb90-default-rtdb.firebaseio.com",
+    "project_id": "fir-flutter-auth-6fb90",
+    "storage_bucket": "fir-flutter-auth-6fb90.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399976911903:android:552a547c2d036d35a9712a",
+        "android_client_info": {
+          "package_name": "com.example.singup_login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399976911903-29jq3tbnibc2g26u935191os46atkq3f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.singup_login",
+            "certificate_hash": "6343f138063ebfa4c3041ae993543b41edefbd1c"
+          }
+        },
+        {
+          "client_id": "399976911903-0v3fc3r1k8sku85ksdgbuk7su6sibt6b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgXY7qSdLrN9ZqJnzhURR_EbzL2JrwZ9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399976911903-0v3fc3r1k8sku85ksdgbuk7su6sibt6b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "399976911903-r0kp22jh05gdnus7jlj5hoac9q0vb9s9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.singupLogin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

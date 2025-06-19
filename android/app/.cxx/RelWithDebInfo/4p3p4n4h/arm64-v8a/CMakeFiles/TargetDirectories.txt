@@ -1,0 +1,2 @@
+C:/mm_aasociates/MMAssociates/android/app/.cxx/RelWithDebInfo/4p3p4n4h/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/mm_aasociates/MMAssociates/android/app/.cxx/RelWithDebInfo/4p3p4n4h/arm64-v8a/CMakeFiles/rebuild_cache.dir

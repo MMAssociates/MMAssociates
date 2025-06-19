@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="$FLUTTER_BASE_HREF">
+
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="A new Flutter project.">
+
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="singup_login">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
+
+    <title>singup_login</title>
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyDgGtrW7zCMa36n83_e-6fjSP9QhkCni3k",
+            authDomain: "fir-flutter-auth-6fb90.firebaseapp.com",
+            projectId: "fir-flutter-auth-6fb90",
+            storageBucket: "fir-flutter-auth-6fb90.firebasestorage.app",
+            messagingSenderId: "399976911903",
+            appId: "1:399976911903:web:08bee114744b02b4a9712a",
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!-- Google API and Identity Services -->
+    <script src="https://apis.google.com/js/api.js" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        window.onload = function() {
+            // Initialize Google Identity Services
+            google.accounts.id.initialize({
+                client_id: "399976911903-0v3fc3r1k8sku85ksdgbuk7su6sibt6b.apps.googleusercontent.com", // Your Web Client ID
+                callback: handleCredentialResponse
+            });
+
+            google.accounts.id.prompt(); // Ensure Google sign-in UI shows up when needed
+        };
+
+        function handleCredentialResponse(response) {
+            console.log("Google Sign-In response:", response);
+
+            // Check if gapi.client is loaded
+            if (typeof gapi !== 'undefined' && gapi.client) {
+                console.log("gapi.client is available, proceeding with initialization");
+
+                // Initialize gapi client
+                gapi.load('client:auth2', function () {
+                    gapi.client.init({
+                        apiKey: 'AIzaSyDgGtrW7zCMa36n83_e-6fjSP9QhkCni3k',
+                        clientId: '399976911903-r9mmet5kf60o37isc9ssc2pepnb4s01v.apps.googleusercontent.com',
+                        scope: 'email',
+                    }).then(function () {
+                        console.log("gapi client initialized successfully");
+
+                        // Authenticate with the received token
+                        const token = response.credential;
+                        gapi.auth2.getAuthInstance().signIn({
+                            'auth2': token
+                        }).then(function(googleUser) {
+                            const authResponse = googleUser.getAuthResponse();
+                            console.log('Token:', authResponse.id_token);
+
+                            // Set token to gapi client
+                            gapi.client.setToken({
+                                'access_token': authResponse.access_token
+                            });
+
+                            // Now proceed with API requests or page navigation
+                            gapi.client.request({
+                                path: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
+                            }).then(function(response) {
+                                console.log('User info:', response);
+                                // Redirect to home page or handle user info
+                            }).catch(function(error) {
+                                console.error('Error fetching user info:', error);
+                            });
+                        });
+                    }).catch(function(error) {
+                        console.error('Error during gapi client initialization:', error);
+                    });
+                });
+            } else {
+                console.error('gapi.client is not loaded yet.');
+            }
+        }
+    </script>
+
+</head>
+<body>
+<script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

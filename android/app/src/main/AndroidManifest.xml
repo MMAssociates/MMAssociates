@@ -1,0 +1,117 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.singup_login"> <!-- Keep your original package name -->
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!-- Needed for Google Maps API Key & Firebase Messaging -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Optional, but recommended for FCM reliability on newer Android versions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- Optional: Required to display scheduled notifications -->
+    <!-- <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> -->
+
+
+    <application
+        android:label="Secrets Of Sports"
+        android:name="${applicationName}"
+        android:icon="@mipmap/sos"> <!-- Make sure this icon reference is correct -->
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+
+            <!-- Intent filter to make this the main entry point -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <!-- BEGIN: Added for Firebase Cloud Messaging Notification Tap -->
+            <!-- Add this intent filter to handle notification clicks when the app is running or backgrounded -->
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <!-- END: Added for Firebase Cloud Messaging Notification Tap -->
+
+        </activity>
+
+        <!-- Add Google Sign-In Activity (Keep as is) -->
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false" /> <!-- Kept false for security -->
+
+        <!-- Add Intent Filter for Google Sign-In (Keep as is - Name might be incorrect based on typical setup) -->
+        <!-- Usually the `com.google.android.gms.auth.api.signin.internal.SignInActivity` is internal
+             and might not need explicit definition or intent filters unless for very specific flows.
+             Leaving as is based on your original file, but double-check if Google Sign-In works. -->
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false"> <!-- Kept false for security -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Flutter Embedding Metadata (Keep as is) -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <!-- BEGIN: Added Firebase Messaging Service -->
+        <!-- This service is essential for receiving FCM messages -->
+        <service
+            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+            android:exported="false"> <!-- Important: Keep exported="false" for security -->
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- END: Added Firebase Messaging Service -->
+
+        <!-- Optional: Set default channel for notifications (if not using flutter_local_notifications custom channels) -->
+        <!-- <meta-data -->
+        <!--     android:name="com.google.firebase.messaging.default_notification_channel_id" -->
+        <!--     android:value="default_channel_id"/> -->
+
+
+    </application> <!-- End of Application tag -->
+
+    <!-- Queries (Keep as is) -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Add other necessary queries here, e.g., for URL launching -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
+
+</manifest>
