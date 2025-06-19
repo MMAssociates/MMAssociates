@@ -4,18 +4,20 @@ workflows:
     instance_type: mac_mini_m2
     
     scripts:
-      - name: Install and Build iOS App
+      - name: Clean, Get Deps, and Build iOS
         script: | 
-          # Exit on first error
+          # Exit on first error for clear logs
           set -e
 
-          # Step 1: Prime the Flutter environment and get verbose debug info
-          flutter doctor -v
+          # Step 1: Clean the project to remove any stale or broken state.
+          # This is the most critical step for a reliable CI build.
+          flutter clean
 
-          # Step 2: Install Flutter dependencies, which creates podhelper
+          # Step 2: Get all dependencies. This will now be forced to
+          # regenerate the native integration files (like podhelper) from scratch.
           flutter pub get
 
-          # Step 3: Let Flutter handle the entire build process, including pod install
+          # Step 3: Build the app. It will now find a perfectly prepared project.
           flutter build ios --release --no-codesign
           
     artifacts:
