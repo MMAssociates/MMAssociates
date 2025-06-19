@@ -1,85 +1,39 @@
 # Miscellaneous
 *.class
 *.log
-*.pyc
-*.swp
+*.lock
+*.pot
+*.svg
 .DS_Store
-.atom/
-.buildlog/
-.history
-.svn/
-migrate_working_dir/
 
-# Flutter/Dart/Pub related
-**/doc/api/
-.dart_tool/
+# IntelliJ
+*.iml
+*.ipr
+*.iws
 .idea/
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
 /build/
-ios/Pods/
-ios/Flutter/App.framework
-ios/Flutter/Flutter.framework
-ios/.symlinks/
-flutter_*.png
+/ios/.symlinks/
+/ios/Flutter/
+/ios/Pods/
+/ios/Runner.xcworkspace
+.ios/
 
-# Android related
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/local.properties
-**/android/key.properties
-*.apk
-*.aab
-# Uncomment this if you want to keep your signin key in secret
-# /android/key.jks
+# Android
+/android/key.properties
+/android/.gradle
+/android/app/build
+android/gradlew
+android/gradle.properties
+android/gradle/wrapper/gradle-wrapper.jar
+android/local.properties
 
-# iOS related
-**/ios/Pods/
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/.symlinks
-**/ios/Runner/GeneratedPluginRegistrant.*
-
-# Windows related
-**/windows/flutter/ephemeral
-**/windows/flutter/generated_plugins.cmake
-**/windows/flutter/generated_config.cmake
-**/windows/runner/Debug/
-**/windows/runner/Profile/
-**/windows/runner/Release/
-**/windows/runner/GeneratedPluginRegistrant.*
-**/windows/runner/flutter_window.dll
-**/windows/runner/flutter_window.exp
-**/windows/runner/flutter_window.lib
-**/windows/runner/flutter_window.pdb
-**/windows/runner/flutter_windows.dll
-**/windows/runner/flutter_windows.pdb
-**/windows/AppPackages/
-**/windows/Bundle/
-**/windows/**/msix.pub
-**/windows/**/msix.pri
-**/windows/**/.vs
-
-# Linux related
-**/linux/flutter/ephemeral
-**/linux/flutter/generated_plugins.cmake
-**/linux/flutter/generated_config.cmake
-**/linux/runner/Debug/
-**/linux/runner/Profile/
-**/linux/runner/Release/
-**/linux/runner/main.o
-**/linux/runner/project_name
-**/linux/my_application.so
-
-# macOS related
-**/macos/Flutter/ephemeral
-**/macos/Flutter/Flutter-framework.zip
-**/macos/Flutter/GeneratedPlugins.xcconfig
-**/macos/Pods/
-**/macos/Runner/GeneratedPluginRegistrant.*
-**/macos/Runner.xcworkspace/
-**/macos/xcshareddata/
-**/macos/*.xcscheme
-*.zip
+# Dart
+/doc/api/
+/.dart_tool/
