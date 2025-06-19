@@ -1,7 +1,8 @@
 workflows:
   flutter-workflow:
     name: Flutter Workflow
-    instance_type: macos_m2
+    # Use a valid machine type from the error message list
+    instance_type: mac_mini_m2 
     
     scripts:
       - name: Get Flutter packages
