@@ -4,17 +4,20 @@ workflows:
     instance_type: mac_mini_m2
     
     scripts:
-      - name: Install Flutter dependencies
+      - name: Build Flutter iOS App
         script: | 
+          # Exit on first error
+          set -e
+
+          # Step 1: Install Flutter dependencies, which creates podhelper
           flutter pub get
 
-      - name: Install iOS dependencies (CocoaPods)
-        script: | 
+          # Step 2: Go into the iOS folder and install pods
           cd ios
           pod install
 
-      - name: Build iOS App
-        script: | 
+          # Step 3: Go back to the root and build the app
+          cd ..
           flutter build ios --release --no-codesign
           
     artifacts:
