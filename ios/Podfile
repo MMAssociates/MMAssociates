@@ -1,7 +1,5 @@
-# Uncomment this line to define a global platform for your project
 platform :ios, '13.0'
 
-# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', {
@@ -16,15 +14,13 @@ def flutter_root
     raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first."
   end
 
-  File.read(generated_xcode_build_settings_path).each_line do |line|
-    next if line.strip.empty?
-    if line.include?('FLUTTER_ROOT')
-      return line.split(' = ').last.strip
-    end
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    return line.split('=').last.strip if line.start_with?("FLUTTER_ROOT=")
   end
+
+  raise "FLUTTER_ROOT not found in Generated.xcconfig"
 end
 
-# This is the new, correct line that replaces the old one.
 require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
 
 flutter_ios_podfile_setup

@@ -2,22 +2,35 @@ workflows:
   flutter-workflow:
     name: Flutter Workflow
     instance_type: mac_mini_m2
-    
+
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        CM_CLEAN: true
+
     scripts:
-      - name: Clean, Get Deps, and Build iOS
-        script: | 
-          # Exit on first error for clear logs
+      - name: Clean, Get Deps, and Install Pods
+        script: |
           set -e
-
-          # Step 1: Clean the project.
           flutter clean
-
-          # Step 2: Get all dependencies. This will generate the xcconfig file
-          # needed by the new Podfile to find the flutter_root.
           flutter pub get
 
-          # Step 3: Build the app. This will now succeed.
+          # Optional: Manually run pod install just to be sure
+          cd ios
+          pod install
+          cd ..
+
+      - name: Build iOS Release (No Code Signing)
+        script: |
           flutter build ios --release --no-codesign
-          
+
     artifacts:
       - build/ios/iphoneos/Runner.app
+      - build/ios/ipa/*.ipa  # optional, if you export ipa in future
+
+    # Optional: Enable this if you later want code signing
+    # code_signing:
+    #   provisioning_profiles:
+    #     ios_profile: Your_Provisioning_Profile_Name
