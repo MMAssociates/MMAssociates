@@ -1,24 +1,39 @@
 workflows:
   flutter-workflow:
-    name: Flutter Workflow
+    name: Flutter Diagnostic Workflow
     instance_type: mac_mini_m2
     
     scripts:
-      - name: Clean, Get Deps, and Build iOS
+      - name: Diagnostic Script
         script: | 
           # Exit on first error for clear logs
           set -e
 
-          # Step 1: Clean the project to remove any stale or broken state.
-          # This is the most critical step for a reliable CI build.
-          flutter clean
+          echo "----------- SCRIPT START -----------"
+          
+          echo " "
+          echo "----------- STEP 1: Running flutter doctor -v -----------"
+          flutter doctor -v
 
-          # Step 2: Get all dependencies. This will now be forced to
-          # regenerate the native integration files (like podhelper) from scratch.
+          echo " "
+          echo "----------- STEP 2: Running flutter clean -----------"
+          flutter clean
+          
+          echo " "
+          echo "----------- STEP 3: Running flutter pub get -----------"
           flutter pub get
 
-          # Step 3: Build the app. It will now find a perfectly prepared project.
+          echo " "
+          echo "----------- STEP 4: Listing contents of the 'ios' directory -----------"
+          # This will show us if the 'Flutter' sub-directory was created
+          ls -la ios/
+          
+          echo " "
+          echo "----------- STEP 5: Attempting the build -----------"
           flutter build ios --release --no-codesign
+          
+          echo " "
+          echo "----------- SCRIPT END: BUILD SUCCEEDED! -----------"
           
     artifacts:
       - build/ios/iphoneos/Runner.app
