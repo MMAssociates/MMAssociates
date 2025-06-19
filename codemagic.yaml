@@ -3,7 +3,7 @@
 workflows:
   flutter-workflow:
     name: Flutter Workflow
-    instance_type: macos_sonoma_m2  # Or any other available macOS machine type
+    instance_type: macos_sonoma_m2
     
     scripts:
       - name: Get Flutter packages
