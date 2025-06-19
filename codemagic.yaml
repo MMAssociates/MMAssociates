@@ -1,0 +1,18 @@
+# A basic Flutter workflow for Codemagic
+
+workflows:
+  flutter-workflow:
+    name: Flutter Workflow
+    instance_type: macos_sonoma_m2  # Or any other available macOS machine type
+    
+    scripts:
+      - name: Get Flutter packages
+        script: | 
+          flutter pub get
+
+      - name: Build iOS App
+        script: | 
+          flutter build ios --no-codesign
+          
+    artifacts:
+      - build/ios/iphoneos/Runner.app
