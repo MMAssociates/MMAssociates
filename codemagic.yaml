@@ -1,17 +1,21 @@
 workflows:
   flutter-workflow:
     name: Flutter Workflow
-    # Use a valid machine type from the error message list
-    instance_type: mac_mini_m2 
+    instance_type: mac_mini_m2
     
     scripts:
-      - name: Get Flutter packages
+      - name: Install Flutter dependencies
         script: | 
           flutter pub get
 
+      - name: Install iOS dependencies (CocoaPods)
+        script: | 
+          cd ios
+          pod install
+
       - name: Build iOS App
         script: | 
-          flutter build ios --no-codesign
+          flutter build ios --release --no-codesign
           
     artifacts:
       - build/ios/iphoneos/Runner.app
