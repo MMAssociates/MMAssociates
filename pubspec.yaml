@@ -24,7 +24,7 @@ dependencies:
   intl_phone_field: ^3.2.0 # Recent version
 
   # Location & Maps (Update moderately)
-  google_maps_flutter: ^2.2.5
+  google_maps_flutter: ^2.6.1
   geolocator: ^12.0.0 # Major version jump might have API changes
   permission_handler: ^11.3.1
   haversine_distance: ^1.2.1 # Stays the same
