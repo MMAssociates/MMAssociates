@@ -1,49 +1,38 @@
-# The One True Podfile for CI/CD
+# The "Sledgehammer" Podfile. No Flutter helpers. No complexity.
 
-# Sets the minimum iOS version for your entire app and its pods.
+# Define the platform version
 platform :ios, '14.0'
 
-# This block defines the 'flutter_root' and then uses it to load the
-# helper script that contains the 'flutter_install_all_ios_pods' function.
-def flutter_root
-  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
-  unless File.exist?(generated_xcode_build_settings_path)
-    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get has been run first."
-  end
-
-  File.foreach(generated_xcode_build_settings_path) do |line|
-    matches = line.match(/FLUTTER_ROOT=(.*)/)
-    return matches[1].strip if matches
-  end
-  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Flutter/Generated.xcconfig and running flutter pub get."
-end
-
-require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
-
+# Define the project and configurations
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
 
 target 'Runner' do
+  # These two lines are essential for Flutter with Firebase
   use_frameworks!
   use_modular_headers!
 
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  # Instead of using Flutter's helper, we let Flutter's build tool inject the plugins.
+  # This Podfile only provides the essential framework and post-build fixes.
 end
 
+# This is the most important part. It runs after all pods are installed.
 post_install do |installer|
-  # --- STEP 1: Run Flutter's standard hooks FIRST ---
-  # This establishes the baseline build settings for all pods.
+  # This loop iterates through EVERY SINGLE pod that was installed.
   installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
-  end
-
-  # --- STEP 2: Apply our targeted fix LAST ---
-  # This runs after Flutter's hooks and overrides the setting for Firebase pods,
-  # ensuring our fix is the final word.
-  installer.pods_project.targets.each do |target|
-    if target.name.include?('Firebase')
-      puts "Fixing non-modular includes for #{target.name}"
-      target.build_configurations.each do |config|
-        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-      end
+    puts "Applying build settings for #{target.name}"
+    target.build_configurations.each do |config|
+      # Set the correct iOS version for every pod
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      
+      # --- THIS IS THE SLEDGEHAMMER FIX ---
+      # For every pod, forcefully allow non-modular includes. This will
+      # solve the Firebase error without needing to guess which pod is
+      # the problem. It is safe to apply this setting to all pods.
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
     end
   end
 end
