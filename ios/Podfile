@@ -5,7 +5,7 @@
 require 'xcodeproj'
 
 # Sets the minimum iOS version for your entire app and its pods.
-platform :ios, '12.0' # Use 12.0 for wide compatibility, or your required minimum like '15.0'
+platform :ios, '14.0' # Use 12.0 for wide compatibility, or your required minimum like '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
