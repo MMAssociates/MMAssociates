@@ -13,34 +13,27 @@ workflows:
     scripts:
       - name: Rebuild iOS folder and Build App
         script: |
-          set -e # Exit immediately if a command fails
+          set -e
 
-          echo "--- 1. Installing dependencies ---"
-          # This is kept as good practice, though not strictly needed by this script.
-          gem install xcodeproj
-          flutter pub get
-
-          echo "--- 2. Recreating the iOS folder from scratch ---"
-          # This is the core of the fix: creating a perfect environment every time.
+          echo "--- 1. Recreating the iOS folder from scratch ---"
           rm -rf ios
           flutter create --platforms=ios .
 
-          echo "--- 3. Restoring critical configuration files ---"
+          echo "--- 2. Restoring critical configuration files ---"
           # This copies your custom settings into the newly created folder.
-          # Ensure you have created the 'ios_config_backup' folder in your repo.
           cp ios_config_backup/Info.plist ios/Runner/
           cp -r ios_config_backup/Assets.xcassets ios/Runner/
-          
-          # --- THIS IS THE FINAL FIX ---
-          # This line replaces the generic Podfile with your custom one,
-          # which sets the correct iOS deployment target (e.g., 14.0).
           cp ios_config_backup/Podfile ios/
-          
           # Uncomment the next line if you use Firebase
           # cp ios_config_backup/GoogleService-Info.plist ios/Runner/
 
+          echo "--- 3. Get packages & generate plugin registration file ---"
+          # This MUST run AFTER the ios folder and Podfile are in place.
+          # This command creates the .flutter-plugins-with-build-configuration file.
+          flutter pub get
+
           echo "--- 4. Building the iOS App ---"
-          # This build will now run on a perfectly clean, fully-configured project.
+          # The flutter build command will now find all necessary files and succeed.
           flutter build ios --release --no-codesign --obfuscate --split-debug-info=build/debug_info
 
     artifacts:
