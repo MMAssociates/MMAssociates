@@ -1,91 +1,20 @@
 # Podfile for a robust Flutter project
 
-# --- FIX PART 1 ---
-# Allows this script to programmatically edit the Xcode project file.
-require 'xcodeproj'
-
 # Sets the minimum iOS version for your entire app and its pods.
-platform :ios, '14.0' # Use 12.0 for wide compatibility, or your required minimum like '15.0'
+platform :ios, '14.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
-}
-
-# This function dynamically finds the path to your Flutter SDK.
-def flutter_root
-  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
-  unless File.exist?(generated_xcode_build_settings_path)
-    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get has been run first."
-  end
-
-  File.foreach(generated_xcode_build_settings_path) do |line|
-    matches = line.match(/FLUTTER_ROOT=(.*)/)
-    return matches[1].strip if matches
-  end
-  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Flutter/Generated.xcconfig and running flutter pub get."
-end
-
-require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
-
 target 'Runner' do
   use_frameworks!
-  use_modular_headers! # <--- THIS IS CRITICAL FOR FIREBASE
+  use_modular_headers! # This is critical for Firebase
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-
-  # --- Add any other pods you need here ---
-  # pod 'SomeOtherPod'
-
 end
 
-# --- FIX PART 2 ---
-# This is the new, robust post_install block that fixes the project file during CI/CD builds.
 post_install do |installer|
-  # Standard Flutter post-install hooks
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    # Ensure all pod targets also use your specified iOS version.
-    target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0' # Match the version at the top
-    end
-  end
-
-  # --- The Definitive CI/CD Fix ---
-  # This script runs AFTER the Flutter tool removes project configs.
-  # It programmatically re-links the Runner project to the correct .xcconfig files.
-  begin
-    project_path = 'Runner.xcodeproj'
-    project = Xcodeproj::Project.open(project_path)
-
-    # Find the Flutter configuration files within the project structure
-    configs = project.files.select { |file| file.path&.end_with?('.xcconfig') }
-    debug_config = configs.find { |config| config.path == 'Debug.xcconfig' }
-    release_config = configs.find { |config| config.path == 'Release.xcconfig' }
-
-    unless debug_config && release_config
-      puts "Could not find Debug.xcconfig or Release.xcconfig in #{project_path}"
-      next
-    end
-
-    puts "Fixing xcconfig links in #{project_path}"
-    project.build_configurations.each do |config|
-      if config.name == 'Debug'
-        puts "  Setting Debug configuration to use Debug.xcconfig"
-        config.base_configuration_reference = debug_config
-      else # Covers Release and Profile
-        puts "  Setting #{config.name} configuration to use Release.xcconfig"
-        config.base_configuration_reference = release_config
-      end
-    end
-
-    project.save
-    puts "Successfully saved updated project configuration."
-  rescue => e
-    puts "Error during post_install script to fix xcconfig links: #{e.message}"
   end
 end
