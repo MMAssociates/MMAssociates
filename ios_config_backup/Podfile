@@ -1,10 +1,7 @@
-# The Final, Correct Podfile for Backup
+# The Definitive Podfile for CI/CD with Firebase
 
 # Sets the minimum iOS version for your entire app and its pods.
 platform :ios, '14.0'
-
-# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
-ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 # This block defines the 'flutter_root' and then uses it to load the
 # helper script that contains the 'flutter_install_all_ios_pods' function.
@@ -25,15 +22,27 @@ require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
 
 
 target 'Runner' do
-  # --- THIS IS THE FIX FOR THE CURRENT ERROR ---
   use_frameworks!
-  use_modular_headers! # This is critical for Firebase
-  # ---
+  use_modular_headers! # We keep this for good practice
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
 post_install do |installer|
+  # --- THE DEFINITIVE FIREBASE FIX ---
+  # This script iterates through all installed pods and explicitly sets the
+  # 'Allow Non-modular Includes' setting for any pod related to Firebase.
+  # This directly fixes the "Include of non-modular header" error.
+  installer.pods_project.targets.each do |target|
+    if target.name.include?('Firebase')
+      puts "Fixing non-modular includes for #{target.name}"
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+    end
+  end
+
+  # Standard Flutter post-install hooks
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
   end
