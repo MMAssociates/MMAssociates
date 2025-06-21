@@ -11,34 +11,25 @@ workflows:
         CM_CLEAN: true
 
     scripts:
-      - name: Rebuild iOS folder and Build App
-        script: |
-          set -e # Exit immediately if a command fails
+  - name: Rebuild iOS folder and Build App
+    script: |
+      set -e
 
-          echo "--- 1. Installing dependencies ---"
-          gem install xcodeproj
-          flutter pub get
+      echo "--- 1. Installing dependencies ---"
+      # We don't need xcodeproj anymore, but it's harmless to keep.
+      gem install xcodeproj
+      flutter pub get
 
-          echo "--- 2. Recreating the iOS folder from scratch (The Brute Force Fix) ---"
-          rm -rf ios # Delete the old ios folder entirely
-          flutter create --platforms=ios . # Recreate a fresh one
+      echo "--- 2. Recreating the iOS folder from scratch ---"
+      rm -rf ios
+      flutter create --platforms=ios .
 
-          echo "--- 3. Restoring critical configuration files ---"
-          # Ensure you have created the 'ios_config_backup' folder in your repo
-          cp ios_config_backup/Info.plist ios/Runner/
-          cp -r ios_config_backup/Assets.xcassets ios/Runner/
-          # Uncomment the next line if you use Firebase
-          # cp ios_config_backup/GoogleService-Info.plist ios/Runner/
+      echo "--- 3. Restoring critical configuration files ---"
+      cp ios_config_backup/Info.plist ios/Runner/
+      cp -r ios_config_backup/Assets.xcassets ios/Runner/
+      cp ios_config_backup/Podfile ios/ # <-- THE NEW, CRITICAL LINE
+      # Uncomment the next line if you use Firebase
+      # cp ios_config_backup/GoogleService-Info.plist ios/Runner/
 
-          echo "--- 4. Building the iOS App ---"
-          # This build will run on a perfectly clean, newly generated project
-          flutter build ios --release --no-codesign --obfuscate --split-debug-info=build/debug_info
-
-    artifacts:
-      - build/ios/iphoneos/Runner.app
-      - build/ios/ipa/*.ipa
-      - build/debug_info/**
-
-    cache:
-      cache_paths:
-        - ~/.pub-cache
+      echo "--- 4. Building the iOS App ---"
+      flutter build ios --release --no-codesign --obfuscate --split-debug-info=build/debug_info
