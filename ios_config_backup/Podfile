@@ -6,6 +6,26 @@ platform :ios, '14.0'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# --- THIS IS THE MISSING PIECE ---
+# This block defines the 'flutter_root' and then uses it to load the
+# helper script that contains the 'flutter_install_all_ios_pods' function.
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get has been run first."
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Flutter/Generated.xcconfig and running flutter pub get."
+end
+
+require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
+# --- END OF THE MISSING PIECE ---
+
+
 target 'Runner' do
   use_frameworks!
   use_modular_headers! # This is critical for Firebase
