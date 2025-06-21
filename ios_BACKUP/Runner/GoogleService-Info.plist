@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>399976911903-tot2uk123ukkdieeq7rpn3okuouhboks.apps.googleusercontent.com</string>
+	<string>399976911903-r0kp22jh05gdnus7jlj5hoac9q0vb9s9.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.399976911903-tot2uk123ukkdieeq7rpn3okuouhboks</string>
+	<string>com.googleusercontent.apps.399976911903-r0kp22jh05gdnus7jlj5hoac9q0vb9s9</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>399976911903-29jq3tbnibc2g26u935191os46atkq3f.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.singuplogin</string>
+	<string>com.example.singupLogin</string>
 	<key>PROJECT_ID</key>
 	<string>fir-flutter-auth-6fb90</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:399976911903:ios:4a3af8645e582f3da9712a</string>
+	<string>1:399976911903:ios:31701da522343d8ea9712a</string>
 	<key>DATABASE_URL</key>
 	<string>https://fir-flutter-auth-6fb90-default-rtdb.firebaseio.com</string>
 </dict>

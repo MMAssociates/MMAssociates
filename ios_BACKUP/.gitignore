@@ -1,0 +1,9 @@
+**/Pods/
+**/.symlinks/
+**/build/
+**/DerivedData/
+.generated/
+Flutter/App.framework
+Flutter/Flutter.framework
+Flutter/ephemeral/
+Flutter/Generated.xcconfig
