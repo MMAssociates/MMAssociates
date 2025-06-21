@@ -1,4 +1,7 @@
-# This sets the minimum iOS version for your entire app
+# This is the corrected, modern Podfile.
+# It automatically finds your Flutter SDK and preserves your iOS 15.0 target.
+
+# Sets the minimum iOS version for your entire app and its pods.
 platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
@@ -10,31 +13,42 @@ project 'Runner', {
   'Release' => :release,
 }
 
-# -------------------------- THE DEFINITIVE FIX --------------------------
-#
-# The dynamic flutter_root function is failing because of spaces in the file path.
-# We are deleting that function entirely and hardcoding the path. This is the
-# most robust solution for this specific build environment.
-#
-flutter_root = '/Volumes/My Shared Files/flutter'
-#
-# ------------------------------------------------------------------------
+# This function dynamically finds the path to your Flutter SDK.
+# This replaces your old hardcoded path and is the main fix.
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get has been run first."
+  end
 
-# This line now uses the guaranteed correct, hardcoded path.
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Flutter/Generated.xcconfig and running flutter pub get."
+end
+
 require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
-
-flutter_ios_podfile_setup
 
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # --- IMPORTANT ---
+  # If you have pods for Firebase, Maps, or other packages, add them here.
+  # For example:
+  # pod 'Firebase/Analytics'
+  # pod 'Firebase/Crashlytics'
+
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
+      # This line ensures all pod targets also use your specified iOS version.
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
     end
   end
