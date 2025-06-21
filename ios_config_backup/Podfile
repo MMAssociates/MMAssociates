@@ -1,4 +1,4 @@
-# Podfile for a robust Flutter project
+# The Final, Correct Podfile for Backup
 
 # Sets the minimum iOS version for your entire app and its pods.
 platform :ios, '14.0'
@@ -6,7 +6,6 @@ platform :ios, '14.0'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
-# --- THIS IS THE MISSING PIECE ---
 # This block defines the 'flutter_root' and then uses it to load the
 # helper script that contains the 'flutter_install_all_ios_pods' function.
 def flutter_root
@@ -23,12 +22,13 @@ def flutter_root
 end
 
 require File.join(flutter_root, 'packages', 'flutter_tools', 'bin', 'podhelper')
-# --- END OF THE MISSING PIECE ---
 
 
 target 'Runner' do
+  # --- THIS IS THE FIX FOR THE CURRENT ERROR ---
   use_frameworks!
   use_modular_headers! # This is critical for Firebase
+  # ---
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
