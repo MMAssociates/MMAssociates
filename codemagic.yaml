@@ -10,19 +10,24 @@ workflows:
       vars:
         CM_CLEAN: true
 
+    # --- THIS IS THE CORRECTED SCRIPT SECTION ---
     scripts:
-      - name: Clean, Get Deps, and Install Pods
+      - name: Install Deps and Build iOS App
         script: |
-          set -e
+          set -e # Exit immediately if a command fails
+
+          # --- THE DEFINITIVE FIX ---
+          # This installs the tool your Podfile's post_install script needs
+          # to programmatically fix the Xcode project file after the Flutter
+          # tool breaks it. This MUST run first.
+          gem install xcodeproj
+
+          # Standard Flutter build steps
           flutter clean
           flutter pub get
 
-          cd ios
-          pod install
-          cd ..
-
-      - name: Build iOS Release (No Code Signing)
-        script: |
+          # The flutter build command will now automatically run 'pod install',
+          # where our self-healing script will execute successfully.
           flutter build ios --release --no-codesign --obfuscate --split-debug-info=build/debug_info
 
     artifacts:
