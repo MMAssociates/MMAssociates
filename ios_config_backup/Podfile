@@ -1,37 +1,26 @@
-# The "Sledgehammer" Podfile. No Flutter helpers. No complexity.
+# The Final Podfile.
 
-# Define the platform version
+# Sets the minimum iOS version for the app.
 platform :ios, '14.0'
 
-# Define the project and configurations
-project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
-}
+# Tells CocoaPods where to find the generated list of plugins to install.
+# This is the line that was missing from the "Sledgehammer" Podfile.
+require_relative '../.flutter-plugins-with-build-configuration'
 
 target 'Runner' do
-  # These two lines are essential for Flutter with Firebase
+  # These two lines are essential for Flutter with Firebase.
   use_frameworks!
   use_modular_headers!
 
-  # Instead of using Flutter's helper, we let Flutter's build tool inject the plugins.
-  # This Podfile only provides the essential framework and post-build fixes.
+  # This function, defined in the file we just required, will install all necessary Flutter plugins.
+  use_flutter_plugins(build_configuration: build_configuration)
 end
 
-# This is the most important part. It runs after all pods are installed.
+# This post_install script fixes any remaining build setting issues.
 post_install do |installer|
-  # This loop iterates through EVERY SINGLE pod that was installed.
   installer.pods_project.targets.each do |target|
-    puts "Applying build settings for #{target.name}"
     target.build_configurations.each do |config|
-      # Set the correct iOS version for every pod
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
-      
-      # --- THIS IS THE SLEDGEHAMMER FIX ---
-      # For every pod, forcefully allow non-modular includes. This will
-      # solve the Firebase error without needing to guess which pod is
-      # the problem. It is safe to apply this setting to all pods.
+      # Forcefully allow non-modular includes for every pod. This is safe and solves the Firebase issue.
       config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
     end
   end
